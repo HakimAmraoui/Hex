@@ -47,9 +47,23 @@ fichier_arcs = 'Arcs.csv'
 # PRAMETRES DEPENDANT DU FICHIER EN ENTREE
 
 LesArcs = open(fichier_arcs, "r")
-# format du fichier : numero d'un noeud de l'arc avec l'autre noeud (le graphe est non orienté alors il n'y a pas d'orig ou de dest)
+# format du fichier : numero d'un noeud de l'arc \t l'autre noeud (le graphe est non orienté alors il n'y a pas d'orig ou de dest)
 tousLesArcs = LesArcs.readlines()
 LesArcs.close()
+
+Origine = []
+Destination = []
+
+for un_arc in tousLesArcs:
+    un_arc.strip("\n")
+    cet_arc = un_arc.split()
+
+    Orig = int(cet_arc[0])
+    Origine.append(Orig)
+
+    Dest = int(cet_arc[1])
+    Destination.append(Dest)
+NbArcs = len(tousLesArcs)
 
 ########################################################
 # Dessin du graphe
@@ -69,6 +83,20 @@ def TraceCercle(j, couleur, rayon):
     y = ((Y[j] - minY) * ratioHeight) + border
     y = winHeight - y
     cercle(x, y, rayon, couleur)
+
+def TraceSegment(i, j, colour):
+    # Coordonnees de i
+    x1 = (X[i] - minX) * ratioWidth + border
+    y1 = ((Y[i] - minY) * ratioHeight) + border
+    y1 = winHeight - y1
+
+    # Coordonnees de j
+    x2 = (X[j] - minX) * ratioWidth + border
+    y2 = ((Y[j] - minY) * ratioHeight) + border
+    y2 = winHeight - y2
+
+    can.create_line(x1, y1, x2, y2, fill=colour)
+
 
 fen = Tk()
 fen.title('Graphe')
@@ -99,7 +127,8 @@ TraceCercle(28, 'black', rayon)
 TraceCercle(25, 'white', rayon)
 TraceCercle(27, 'white', rayon)
 
-
+for i in range(NbArcs):
+    TraceSegment(Origine[i], Destination[i], 'grey')
 
 
 def change_color_to_white(x, y):
